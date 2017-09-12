@@ -1,7 +1,13 @@
 eclipse.preferences.version=1
+encoding//src/main/java/com/job/ReaderManagement.java=UTF-8
+encoding//src/main/java/com/json/JsonManagement.java=UTF-8
 encoding//src/main/java/com/linux/LinuxManagement.java=UTF-8
 encoding//src/main/webapp/dataxjsp/admin_top.jsp=UTF-8
+encoding//src/main/webapp/dataxjsp/createjob.jsp=UTF-8
 encoding//src/main/webapp/dataxjsp/job/createjob.jsp=UTF-8
 encoding//src/main/webapp/dataxjsp/left.jsp=UTF-8
 encoding//src/main/webapp/dataxjsp/main.jsp=UTF-8
 encoding//src/main/webapp/dataxjsp/right.jsp=UTF-8
+encoding//src/main/webapp/dataxjsp/test.jsp=UTF-8
+encoding//src/main/webapp/dataxjsp/wjs/util.js=UTF-8
+encoding/<project>=UTF-8

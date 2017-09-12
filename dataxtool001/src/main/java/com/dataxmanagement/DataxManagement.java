@@ -1,7 +1,9 @@
 package com.dataxmanagement;
 import com.job.JobConfigurationManagement;
+import com.job.ReaderManagement;
 import com.linux.LinuxManagement;
 
+import net.sf.json.JSON;
 import net.sf.json.JSONObject;
 
 public class DataxManagement {
@@ -19,6 +21,14 @@ public class DataxManagement {
 	 */
 	public StringBuffer defaultExe() {
 		return lm.callDefaultShell();//Ä¬ÈÏµÄÃüÁî
+		
+	}
+	public ReaderManagement getReaderManagement() {
+		return null;
+	}
+
+	public void updateReader(String name, String value, JSONObject json) {
+		jcm.updateReader(name,value,json);
 		
 	}
 	

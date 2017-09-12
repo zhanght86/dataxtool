@@ -19,7 +19,7 @@ public class ReaderManagement {
 	}
 	public void addParameter(JSONObject reader,Object key,Object value) {
 		JSONObject p=(JSONObject) reader.get("parameter");
-		if(p==null) {//没有则创建一个
+		if(p==null) {//娌℃湁鍒欏垱寤轰竴涓�
 			p=new JSONObject();
 			reader.put("parsmeter", p);
 		}else {
@@ -67,6 +67,20 @@ public class ReaderManagement {
 		addColumn(defaultReader, "tests", "bytes");
 		addParameter(defaultReader, "sliceRecordCount", 10000);
 		return defaultReader;
+	}
+	/**
+	 * 
+	 * 
+	 * @param name
+	 * @param value
+	 * @param json
+	 * 更新reader
+	 */
+	public void updateReader(String name, String value,  JSONObject json) {
+		//这里得到的结果是字符串
+		jsonm.anzlizeAndUpdate(name, value, json);
+		System.out.println(json.toString());
+		
 	}
 	
 }

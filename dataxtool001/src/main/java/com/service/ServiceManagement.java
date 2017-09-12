@@ -9,25 +9,27 @@ import javax.servlet.http.HttpServletResponse;
 import javax.xml.ws.Response;
 
 import com.dataxmanagement.DataxManagement;
+import com.job.ReaderManagement;
 import com.json.JsonManagement;
 
 import net.sf.json.JSONObject;
 
 public class ServiceManagement {
-	//datax管理对象
+
 	private DataxManagement dm=new DataxManagement();
-	//json管理对象
+	
 	private JsonManagement jm=new JsonManagement();
 	public void createjob(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		JSONObject json=dm.generateDefaultJob();
 		String s=jm.formatJson(json.toString());
-		request.setAttribute("s", s);
-		request.getRequestDispatcher("dataxjsp/result/result.jsp").forward(request, response);;
+		System.out.println(s);
+		response.getWriter().write(s);
 		
+	
 	}
 	/**
 	 * 
-	 * 执行linux命令
+	 * 执锟斤拷linux锟斤拷锟斤拷
 	 * @throws IOException 
 	 * @throws ServletException 
 	 */
@@ -36,8 +38,25 @@ public class ServiceManagement {
 		String s=sb.toString();
 		request.setAttribute("s", s);
 		request.getRequestDispatcher("dataxjsp/result/result.jsp").forward(request, response);;
-		
+	}
+	
+
+	public void updateReader(HttpServletRequest request, HttpServletResponse response) {
+		String name=request.getParameter("name");
+		String value=request.getParameter("value");
+		JSONObject json=dm.generateDefaultJob();
+		dm.updateReader(name, value, json);
+		String s=jm.formatJson(json.toString());
+		try {
+			PrintWriter pw =response.getWriter();
+			pw.print(s);
+			pw.flush();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		
 	}
+	
 
 }

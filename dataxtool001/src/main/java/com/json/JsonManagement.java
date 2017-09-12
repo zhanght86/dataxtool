@@ -21,7 +21,7 @@ public class JsonManagement {
 		return jsonObject;
 	}
 	public String parseJsonFileToString(String uri) {
-		if(uri==null||"".equals(uri)) {//使用默认的路径
+		if(uri==null||"".equals(uri)) {//浣跨敤榛樿鐨勮矾寰�
 			uri="d://job.json";
 		}
 		File f=new File(uri);
@@ -38,7 +38,7 @@ public class JsonManagement {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} catch (IOException e) {
-			System.out.println("IO异常");
+			System.out.println("IO寮傚父");
 			e.printStackTrace();
 		}
 		return json.toString();
@@ -69,27 +69,93 @@ public class JsonManagement {
 		return json;
 		
 	}
-	public Object findJSONByKey(String key,JSONObject obj) {
+	/**
+	 *	找到指定名字的节点 
+	 * 	第四个参数用来判断是要知道该节点，还是该节点的父亲节点
+	 */
+	public Object findJSONByKey(String key,JSONObject obj,boolean isParent) {
 		Context c=new Context();
-		
 		anzlize(key,c,obj);
+		if(isParent) {
+			return c.getJoParent();
+		}
 		return c.getJo();
 	}
-	
-	private void anzlize(String key, Context c,Object o) {
-		
-		if(o instanceof JSONObject) { //对象 
+	/**
+	 * 在遍历的过程中便进行修改
+	 * value可以有三种对象String，josnArray，jsonObject
+	 * 
+	 */
+	public void updateJSONByKey(String key,Object value,JSONObject obj) {
+		Context c=new Context();
+		anzlize(key,c,obj);
+		anzlizeAndUpdate(key,value,obj);
+	}
+
+	/**
+	 * 
+	 * 
+	 * 遍历并且修改
+	 * @param key
+	 * @param object
+	 */
+	public void anzlizeAndUpdate(String key, Object value,Object o) {
+		if(o instanceof JSONObject) { 
+			//当前json对象
 			JSONObject jsonObj=(JSONObject) o;
-			
-			//判断对象里面的key是否是要寻找的key
+			//将json对象的key遍历
 			Iterator it=jsonObj.keys();
 			while(it.hasNext()) {
+				//每次遍历得到的是属性的名字
 				String subKey=it.next().toString();
-				//判断是否是要寻找的key
-				if(key.equals(subKey)) {
+				if(key.equals(subKey)) {//找到对指定的key
+					jsonObj.put(key, value);
+					
+				}else {//没有找到，遍历子对象
+					anzlizeAndUpdate(key,value,jsonObj.get(subKey));
+				}
+			}
+			
+		}else if(o instanceof JSONArray) {
+			JSONArray arr=(JSONArray) o;
+			
+			for(int i=0;i<arr.size();i++) {
+				anzlizeAndUpdate(key,value,arr.get(i));
+			}
+		}else { //涓�鑸殑鍊� do nothing
+			
+		}
+		
+	}
+	/**
+	 * 
+	 * 
+	 * @param key 需要查找的键值对
+	 * @param c 该参数是遍历时候的环境对象
+	 * @param o 需要查找的json对象
+	 * 
+	 * 这里的查找会返回三种对象
+	 * 	String对象
+	 *  object对象
+	 *  array对象
+	 */
+	private void anzlize(String key, Context c,Object o) {
+		if(o instanceof JSONObject) { 
+			//当前json对象
+			JSONObject jsonObj=(JSONObject) o;
+			//将json对象的key遍历
+			Iterator it=jsonObj.keys();
+			while(it.hasNext()) {
+				//每次遍历得到的是属性的名字
+				String subKey=it.next().toString();
+				if(key.equals(subKey)) {//找到对指定的key
+					//这里得到的对象可能是string，array,或者是object
 					Object subObject=jsonObj.get(subKey);
+					
+					//这里一并放入找到节点的父节点
+					c.setJoParent(o);
 					c.setJo(subObject);
-				}else {
+				}else {//没有找到，遍历子对象
 					anzlize(key, c,jsonObj.get(subKey) );
 				}
 			}
@@ -100,7 +166,7 @@ public class JsonManagement {
 			for(int i=0;i<arr.size();i++) {
 				anzlize(key, c,arr.get(i));
 			}
-		}else { //一般的值 do nothing
+		}else { //涓�鑸殑鍊� do nothing
 			
 		}
 		
@@ -119,7 +185,7 @@ public class JsonManagement {
             last = current;
             current = jsonStr.charAt(i);
 
-           //遇到{ [换行，且下一行缩进
+           //閬囧埌{ [鎹㈣锛屼笖涓嬩竴琛岀缉杩�
            switch (current) {
                 case '{':
                 case '[':
@@ -129,7 +195,7 @@ public class JsonManagement {
                     addIndentBlank(sb, indent);
                     break;
 
-             //遇到} ]换行，当前行缩进
+             //閬囧埌} ]鎹㈣锛屽綋鍓嶈缂╄繘
                case '}':
                 case ']':
                     sb.append('\n');
@@ -138,7 +204,7 @@ public class JsonManagement {
                     sb.append(current);
                     break;
 
-              //遇到,换行
+              //閬囧埌,鎹㈣
                case ',':
                     sb.append(current);
                     if (last != '\\') {
@@ -155,7 +221,7 @@ public class JsonManagement {
     }
  
     /**
-     * 添加space
+     * 娣诲姞space
      * @param sb
      * @param indent
      */
@@ -165,7 +231,7 @@ public class JsonManagement {
         }
     }
     
-    //格式化输出json
+    //鏍煎紡鍖栬緭鍑簀son
     public static void showJson(Object json) {
     	String s=json.toString();
     	System.out.println(JsonManagement.formatJson(s));
@@ -173,12 +239,12 @@ public class JsonManagement {
     
     public static void StringToFile(String json,String url) {
     	  // TODO Auto-generated method stub
-        File f=new File(url);//新建一个文件对象
+        File f=new File(url);//鏂板缓涓�涓枃浠跺璞�
         FileWriter fw;
         try {
-        	fw=new FileWriter(f);//新建一个FileWriter
+        	fw=new FileWriter(f);//鏂板缓涓�涓狥ileWriter
         	//String str="chenliang\r\nrrrrrrttttttt";
-        	fw.write(json);//将字符串写入到指定的路径下的文件中
+        	fw.write(json);//灏嗗瓧绗︿覆鍐欏叆鍒版寚瀹氱殑璺緞涓嬬殑鏂囦欢涓�
         	fw.close();
   
         } catch (IOException e) {

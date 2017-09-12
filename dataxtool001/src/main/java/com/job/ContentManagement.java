@@ -39,6 +39,10 @@ public class ContentManagement {
 		defaultContent.add(obj);
 		return defaultContent;
 	}
+	public void updateReader(String name, String value, String op, JSONObject json) {
+		
+		
+	}
 
 
 
