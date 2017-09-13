@@ -81,14 +81,13 @@
 			里面包含了许多的隐藏栏目，根据一级和二级的下拉框来确定显示的内容
 		 -->
 		<form id="ff" method="post">   
-		
 			<!-- 二级联动 -->
 			<span>reader的种类：</span>  
-			<input class="easyui-combobox"  style="width:50" id="readertype"> 
+			<input class="easyui-combobox"  style="width:50" id="readertype" name="readertype"> 
 			<span>reader的参数：</span>  
-			<input class="easyui-combobox"  style="width:30;" id="readerparameter"><br/>
+			<input class="easyui-combobox"  style="width:30;" id="readerparameter" name="readerparameter">
 			<!-- 操作 -->
-			<select id="op" class="easyui-combobox" name="dept" style="width:200px;">   
+			<select id="op" class="easyui-combobox" name="op" style="width:200px;"> <br>  
 			    <option value="add">add</option>   
 			    <option value="delete">delete</option>   
 			    <option value="update">update</option>   
@@ -96,17 +95,19 @@
 			</select>
 		    <div>   
 		        <label for="name">key:</label>   
-		        <input id="key"  class="easyui-validatebox" type="text" name="name" data-options="required:true" />   
-		    </div>   
-		    <div>   
-		          <label for="value">value:</label>
-		        <input id="value" class="easyui-validatebox" type="text" name="value"   />   
-		    </div> 
-		    	<input id="op" type="hidden" /> 
-		    <div>    
-		        <input id="commit" type="button" value="提交">  
-		    </div>      
+		        <input id="请输入指定的参数"  class="easyui-validatebox" type="text" name="arg" data-options="required:true" />   
+		    </div>    
+		   
+		     <input id="commit" type="button" value="提交">  
+		    
 		</form>
+		
+		
+
+		
+		<!-- 该表格用来将讲查询得到的数据格式化,通过js来设置相应的属性 -->
+		<table id="dg"></table>
+	
     </div> 
     
    

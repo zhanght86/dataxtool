@@ -1,15 +1,15 @@
 [{    
-    "id":1,    
+    "id":"streamreader" ,    
     "text":"streamreader"  ,
      "selected":true
 },{    
-    "id":2,    
+    "id":"mysqlreader",    
     "text":"mysqlreader"   
 },{    
-    "id":3,    
+    "id":"orclereader",    
     "text":"orclereader" 
        
 },{    
-    "id":4,    
+    "id":"hdfsreader",    
     "text":"hdfsreader"   
 }] 

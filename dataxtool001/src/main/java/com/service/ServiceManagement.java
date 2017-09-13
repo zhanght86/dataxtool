@@ -12,6 +12,7 @@ import com.dataxmanagement.DataxManagement;
 import com.job.ReaderManagement;
 import com.json.JsonManagement;
 
+import net.sf.json.JSON;
 import net.sf.json.JSONObject;
 
 public class ServiceManagement {
@@ -39,17 +40,30 @@ public class ServiceManagement {
 		request.setAttribute("s", s);
 		request.getRequestDispatcher("dataxjsp/result/result.jsp").forward(request, response);;
 	}
-	
 
+	/**
+	 *	用于更新reader的值
+	 * 
+	 */
 	public void updateReader(HttpServletRequest request, HttpServletResponse response) {
-		String name=request.getParameter("name");
-		String value=request.getParameter("value");
+		//获取前台表单的数据
+		String arg=request.getParameter("arg");
+		String readertype=request.getParameter("readertype");
+		String readerparameter=request.getParameter("readerparameter");
+		String op=request.getParameter("op");
 		JSONObject json=dm.generateDefaultJob();
-		dm.updateReader(name, value, json);
-		String s=jm.formatJson(json.toString());
+		//修改json
+		dm.updateReader(readerparameter, arg, json);
+		//将json格式转化为key-value格式
+		JSONObject table=jm.translateJsonObjToTable(json);
+		JSONObject result=new JSONObject();
+		//返回结果
+		result.put("table", table);
+		result.put("json", json);
+		//String s=jm.formatJson(json.toString());
 		try {
 			PrintWriter pw =response.getWriter();
-			pw.print(s);
+			pw.print(result.toString());
 			pw.flush();
 		} catch (IOException e) {
 			// TODO Auto-generated catch block

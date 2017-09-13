@@ -11,6 +11,8 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
+import com.sun.org.apache.bcel.internal.generic.IF_ACMPEQ;
+
 import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
 
@@ -257,7 +259,69 @@ public class JsonManagement {
     	String jsonString=json.toString();
     	StringToFile(jsonString, url);
     }
-  
+    /**
+     * 
+     * 
+     * @return
+     */
+	public JSONObject translateJsonObjToTable(JSONObject json) {
+		JSONObject table=null;
+		Context context=new Context();
+		//遍历json找出各种键值对
+	
+		anazlizeTable(context, json);
+		table=JSONObject.fromObject(context.getTables());
+		
+		
+		return table;
+	}
+	private void anazlizeTable(Context c,Object o) {
+		if(o instanceof JSONObject) { 
+			//当前json对象
+			JSONObject jsonObj=(JSONObject) o;
+			//将json对象的key遍历
+			Iterator it=jsonObj.keys();
+			while(it.hasNext()) {
+				//每次遍历得到的是属性的名字
+				String subKey=it.next().toString();
+				if(isString(jsonObj,subKey)) { //是字符
+					if(subKey.equals("type")||subKey.equals("value")) {
+						//do nothing
+					}else {
+						
+						c.getTables().put(subKey, jsonObj.getString(subKey));
+					}
+				}else {
+					anazlizeTable( c,jsonObj.get(subKey) );
+				}
+				
+			
+
+			}
+			
+		}else if(o instanceof JSONArray) {
+			JSONArray arr=(JSONArray) o;
+			for(int i=0;i<arr.size();i++) {
+				anazlizeTable( c,arr.get(i));
+			}
+		}else { //为字符串的时候
+	
+			
+			
+		}
+		
+	}
+	//判断该json对象的属性是否是key-value的样子
+	private boolean isString(JSONObject jsonObj, String subKey) {
+		Object subJson=jsonObj.get(subKey);
+		if(subJson instanceof JSONObject){
+			return false;
+		}else if(subJson instanceof JSONArray) {
+			return false;
+		}
+		return true;
+	
+	}
  
     
 }
