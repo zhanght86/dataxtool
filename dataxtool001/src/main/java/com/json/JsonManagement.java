@@ -11,11 +11,13 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
+import org.springframework.stereotype.Service;
+
 import com.sun.org.apache.bcel.internal.generic.IF_ACMPEQ;
 
 import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
-
+@Service
 public class JsonManagement {
 	public JSONObject translateStringToJSONObiect(String jsonOfString) {
 		JSONObject jsonObject=null;
@@ -322,6 +324,42 @@ public class JsonManagement {
 		return true;
 	
 	}
+	/**
+	 * 
+	 * 遍历的过程中删除指定的key-value
+	 *  
+	 * @param reader
+	 * @param key
+	 */
+	public void anzlizeAndDelete(String key,Object o) {
+		if(o instanceof JSONObject) { 
+			//当前json对象
+			JSONObject jsonObj=(JSONObject) o;
+			//将json对象的key遍历
+			Iterator it=jsonObj.keys();
+			while(it.hasNext()) {
+				//每次遍历得到的是属性的名字
+				String subKey=it.next().toString();
+				if(key.equals(subKey)) {//找到对指定的key
+					jsonObj.remove(subKey);
+					return ;
+				}else {//没有找到，遍历子对象
+					anzlizeAndDelete(key, jsonObj.get(subKey));
+				}
+			}
+			
+		}else if(o instanceof JSONArray) {
+			JSONArray arr=(JSONArray) o;
+			
+			for(int i=0;i<arr.size();i++) {
+				anzlizeAndDelete(key,arr.get(i));
+			}
+		}else { //涓�鑸殑鍊� do nothing
+			
+		}
+		
+	}
+
  
     
 }

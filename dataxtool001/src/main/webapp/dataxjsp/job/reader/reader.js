@@ -13,12 +13,11 @@ $(function(){
 			$("#readertype").combobox({
 		        valueField: 'text',    
 		        textField: 'text', 
-				url:'readertype.json',
+				url:'/dataxtool001/dataxjsp/job/reader/readertype.json',
 				onSelect:function(){	//当下拉框被选中
 					var select=$("#readertype").combobox('getText');
-					var url=select+'parameter.json';
+					var url="/dataxtool001/dataxjsp/job/reader/"+select+'parameter.json';
 					$("#readerparameter").combobox('reload',url);
-					
 				}
 			});
 			
@@ -43,19 +42,8 @@ $(function(){
 				}
 			});
 			
-
-			
-
 			//设置表单属性成为ajax提交
-			$('#ff').form({  
-				dataType:"json",
-				type:"GET",
-			    url:"http://localhost:8080/dataxtool001/ControlServlet",    
-			    onSubmit: function(){    
-			    	alert("提交成功");
-			        // do some check    
-			        // return false to prevent submit;    
-			    },    
+			$('#ff').form({      
 			    success:function(data){//当请求之后调用，传入返回后的数据，以及包含成功代码的字符串
 			    	//当按钮提交成功，而且成功的响应，并且响应的结果是json
 			        //var data = eval('(' + data + ')');  // change the JSON string to javascript object    
@@ -70,7 +58,6 @@ $(function(){
 			        	var row={"key":d,"value":value};
 			        	//var rowjson=JSON.parse(row);
 			        	arr.push(row);
-		
 			        }
 			        //更新数据
 		         	$("#dg").datagrid({
@@ -80,9 +67,39 @@ $(function(){
 			}); 
 			//设置提交按钮，为提交按钮绑定提交事件
 			$("#commit").click(function(){
-				//为commit按钮绑定click时间，该时间就是提交表单
-				$('#ff').submit();
+				var readertype=$("#readertype").combobox("getValue");
+				var readerparameter=$("#readerparameter").combobox("getValue");
+				var op=$("#op").combobox("getValue");
+				var arg=$("#arg").attr("value");
+				var jsonarg={
+					"readertype":readertype,
+					"readerparameter":readerparameter,
+					"op":op,
+					"arg":arg	
+				};
+				//根据不同的请求op请求不同的url
+				var urlarg="http://localhost:8080/dataxtool001/datax/reader/"+op+".do";
+		    	alert("提交成功"); 
+		        $.ajax({
+		            type: "POST",//请求类型
+		            //url: "http://localhost:8080/dataxtool001/datax/managementdatax.do",
+		            url:urlarg,
+		            contentType: "application/json",
+		            data: JSON.stringify(jsonarg),
+		            success: function () {
+		            	alert("success");
+		            },
+		            error: function () {
+		            	alert(jsonstr);
+		            	alert("error");
+		            }
+		        });
 			});
+				
+			
+			
+			
+			
 			
 			//设置表格的属性和各个行的属性
 			$('#dg').datagrid({    

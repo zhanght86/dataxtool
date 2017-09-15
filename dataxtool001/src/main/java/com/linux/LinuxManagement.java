@@ -5,9 +5,12 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 
+import org.springframework.stereotype.Service;
+
 import ch.ethz.ssh2.Connection;
 import ch.ethz.ssh2.Session;
 import ch.ethz.ssh2.StreamGobbler;
+@Service
 public class LinuxManagement {
 	public StringBuffer callShell(String command) {
 		//process对象是jvm开启的一个子进程，通过该对象获得进程的信息

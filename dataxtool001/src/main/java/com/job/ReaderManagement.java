@@ -1,18 +1,21 @@
 package com.job;
 
 import org.apache.commons.collections.CollectionUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import com.json.JsonManagement;
 
 import net.sf.json.JSON;
 import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
-
+@Service
 public class ReaderManagement {
-	private JsonManagement jsonm=new JsonManagement();
+	@Autowired
+	private JsonManagement jsonManagement=new JsonManagement();
 	public JSONObject processReader() {
-		JSONObject parameter=jsonm.createNewJsonObject();
-		JSONObject reader=jsonm.createNewJsonObject();
+		JSONObject parameter=jsonManagement.createNewJsonObject();
+		JSONObject reader=jsonManagement.createNewJsonObject();
 		reader.put("name", "mysqlreader");
 		reader.put("parameter", parameter);
 		return reader;
@@ -78,8 +81,17 @@ public class ReaderManagement {
 	 */
 	public void updateReader(String name, String value,  JSONObject json) {
 		//这里得到的结果是字符串
-		jsonm.anzlizeAndUpdate(name, value, json);
-		System.out.println(json.toString());
+		jsonManagement.anzlizeAndUpdate(name, value, json);
+		
+	}
+	/**
+	 * 
+	 * 删除指定的参数
+	 * @param reader
+	 * @param key
+	 */
+	public void deleteByKey(JSONObject reader, String key) {
+		jsonManagement.anzlizeAndDelete(key, reader);
 		
 	}
 	

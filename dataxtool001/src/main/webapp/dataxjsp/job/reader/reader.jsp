@@ -95,7 +95,7 @@
 			</select>
 		    <div>   
 		        <label for="name">key:</label>   
-		        <input id="请输入指定的参数"  class="easyui-validatebox" type="text" name="arg" data-options="required:true" />   
+		        <input id="arg"  class="easyui-validatebox" type="text" name="arg" data-options="required:true" />   
 		    </div>    
 		   
 		     <input id="commit" type="button" value="提交">  

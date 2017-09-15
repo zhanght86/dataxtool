@@ -1,14 +1,16 @@
 package com.job;
 
+import org.springframework.stereotype.Service;
+
 import com.json.JsonManagement;
 
 import net.sf.json.JSONObject;
-
+@Service
 public class WriterManagement {
-	private JsonManagement jsonm=new JsonManagement();
+	private JsonManagement jsonManagement=new JsonManagement();
 	public JSONObject processWriter() {
-		JSONObject parameter=jsonm.createNewJsonObject();
-		JSONObject reader=jsonm.createNewJsonObject();
+		JSONObject parameter=jsonManagement.createNewJsonObject();
+		JSONObject reader=jsonManagement.createNewJsonObject();
 		reader.put("name", "mysqlwriter");
 		reader.put("parameter", parameter);
 		return reader;

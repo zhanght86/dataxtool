@@ -1,7 +1,9 @@
 package com.job;
 
-import net.sf.json.JSONObject;
+import org.springframework.stereotype.Service;
 
+import net.sf.json.JSONObject;
+@Service
 public class SettingManagement {
 	public JSONObject processSetting() {
 		JSONObject speed=new JSONObject();

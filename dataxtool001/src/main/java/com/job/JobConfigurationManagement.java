@@ -1,15 +1,31 @@
 package com.job;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
-
+/**
+ * 
+ * jocconfigurationmanagement:用来对配置文件做管理
+ * 		该对象有四个组件
+ * 		SettingManagement
+ * 		JsonManagement
+ * @author Johnny
+ *
+ */
+@Service
 public class JobConfigurationManagement {
-	private SettingManagement settingManagement=new SettingManagement();
-	private ReaderManagement readerManagement=new ReaderManagement();
-	private WriterManagement writerManagement=new WriterManagement();
-	private JobManagement jm=new JobManagement();
+	@Autowired
+	private SettingManagement settingManagement;
+	@Autowired
+	private ContentManagement contentManagement;
 	public JSONObject generateDefaultConfiguration() {
+		JSONArray defaultContent=contentManagement.generateDefaultContent();
+		JSONObject defaultSetting=settingManagement.generateDefaultSetting();
+		JSONObject job=new JSONObject();
+		job.put("setting", defaultSetting);
+		job.put("content", defaultContent);
 		JSONObject c=new JSONObject();
-		JSONObject job=jm.generateDefaultJob();
 		c.put("job", job);
 		return c;
 	}
@@ -22,6 +38,7 @@ public class JobConfigurationManagement {
 	
 
 	public void updateReader(String name, String value, JSONObject json) {
+		ReaderManagement readerManagement=contentManagement.getReaderManagement();
 		readerManagement.updateReader(name,value,json);
 		
 	}
