@@ -42,15 +42,6 @@ public class DataxManagement {
 		jcm.updateReader(name,value,json);
 		
 	}
-	/**
-	 * 
-	 * 队datax中地reader进行处理，
-	 * @param dataxReaderOP
-	 * @return   处理之后会返回一个json对象，该json对象是一个reader的对象
-	 */
-	public JSONObject processReader(DataxReaderOP dataxReaderOP) {
-		return null;
-	}
-	
+
 	
 }

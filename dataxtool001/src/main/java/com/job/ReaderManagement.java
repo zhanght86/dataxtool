@@ -29,8 +29,8 @@ public class ReaderManagement {
 			p.put(key, value);
 		}
 	}
-	public void addName(JSONObject reader,String valueOfName) {
-		reader.put("name", valueOfName);
+	public void addName(JSONObject reader,String key,String value) {
+		reader.put(key, value);
 	}
 	public void addColumn(JSONObject reader,String value,String type) {
 		JSONObject c=new JSONObject();
@@ -62,7 +62,7 @@ public class ReaderManagement {
 	public JSONObject generateDefaultReader() {
 		JSONObject parameter=new JSONObject();
 		JSONObject defaultReader=new JSONObject();
-		addName(defaultReader, "streamreader");
+		addName(defaultReader,"name", "streamreader");
 		addColumn(defaultReader, "DataX", "string");
 		addColumn(defaultReader, "19890604", "long");
 		addColumn(defaultReader, "1989-06-04 00:00:00", "date");
@@ -92,6 +92,28 @@ public class ReaderManagement {
 	 */
 	public void deleteByKey(JSONObject reader, String key) {
 		jsonManagement.anzlizeAndDelete(key, reader);
+		
+	}
+	/**
+	 * 
+	 * 
+	 * 查询指定key的json对象
+	 * @param reader
+	 * @param readerParameter
+	 * @return
+	 */
+	public Object findJsonByKey(JSONObject reader, String readerParameter) {
+		//这里返回结果会有三种jsonObj,jsonArray,value
+		//要对value进行特殊处理
+		Object result=jsonManagement.findJSONByKey(readerParameter, reader, false);
+		if((result instanceof JSONObject)||(result instanceof JSONArray)) {
+			return result;
+		}else {
+			JSONObject jsonObject=new JSONObject();
+			jsonObject.put(readerParameter, result);
+			return jsonObject;
+			
+		}
 		
 	}
 	

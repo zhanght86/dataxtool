@@ -11,8 +11,11 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
+import javax.json.Json;
+
 import org.springframework.stereotype.Service;
 
+import com.alibaba.fastjson.parser.deserializer.ParseProcess;
 import com.sun.org.apache.bcel.internal.generic.IF_ACMPEQ;
 
 import net.sf.json.JSONArray;
@@ -77,7 +80,7 @@ public class JsonManagement {
 	 *	找到指定名字的节点 
 	 * 	第四个参数用来判断是要知道该节点，还是该节点的父亲节点
 	 */
-	public Object findJSONByKey(String key,JSONObject obj,boolean isParent) {
+	public Object findJSONByKey(String key,Object obj,boolean isParent) {
 		Context c=new Context();
 		anzlize(key,c,obj);
 		if(isParent) {
@@ -263,20 +266,50 @@ public class JsonManagement {
     }
     /**
      * 
-     * 
+     * 将json格式的数据转化为表格
+     * 这里需要注意的是如果是column则会进行特殊处理
      * @return
      */
-	public JSONObject translateJsonObjToTable(JSONObject json) {
+	public JSONObject translateJsonObjToTable(Object json) {
 		JSONObject table=null;
 		Context context=new Context();
 		//遍历json找出各种键值对
-	
 		anazlizeTable(context, json);
+		//前面的遍历忽略了column，这里要对cloumn处理
+		JSONArray column=(JSONArray) findJSONByKey("column", json, false);
+		if(column!=null) {
+			processColumn(context,column);
+			
+		}
 		table=JSONObject.fromObject(context.getTables());
-		
-		
 		return table;
 	}
+	/**
+	 * 
+	 * 专门用来处理column
+	 * @param context 
+	 * @param column
+	 */
+	private void processColumn(Context context, JSONArray column) {
+		
+		for(int i=0;i<column.size();i++) {
+			//得到的子元素任然为一个Json对象
+			JSONObject c=column.getJSONObject(i);
+			String value=(String) c.get("value");
+			String type=(String) c.get("type");
+			String vaulename="value"+i;
+			String typename="type"+i;
+			context.getTables().put(vaulename, value);
+			context.getTables().put(typename, type);
+		}
+		
+	}
+	/**
+	 * 
+	 * 遍历并生成一张表格
+	 * @param c
+	 * @param o
+	 */
 	private void anazlizeTable(Context c,Object o) {
 		if(o instanceof JSONObject) { 
 			//当前json对象
@@ -359,6 +392,11 @@ public class JsonManagement {
 		}
 		
 	}
+
+
+
+	
+	
 
  
     

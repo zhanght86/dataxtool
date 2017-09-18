@@ -1,10 +1,11 @@
 package com.service;
+import java.util.HashMap;
+import java.util.Map;
 
-import javax.print.DocFlavor.READER;
+import javax.json.Json;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
 import com.dataxmanagement.DataxManagement;
 import com.domain.op.DataxReaderOP;
 import com.job.ReaderManagement;
@@ -25,10 +26,10 @@ public class DataxServiceManagement {
 		首先验证要执行的操作是否为add
 	 * @param dataxReaderOP
 	 */
-	public JSONObject processDataxReaderAdd(DataxReaderOP dataxReaderOP) {
+	public Map processDataxReaderAdd(DataxReaderOP dataxReaderOP) {
 		ReaderManagement readerManagement=new ReaderManagement();
 		//生成一个默认的reader
-		JSONObject reader=readerManagement.generateDefaultReader();
+		JSONObject result=readerManagement.generateDefaultReader();
 		if("add".equals(dataxReaderOP.getOp())) {
 			//判断要添加的名字
 			if(!"column".equals(dataxReaderOP.getReaderparameter())) {
@@ -36,7 +37,7 @@ public class DataxServiceManagement {
 				//接下来还需要判断该字段是否已经存在，如果存在就则给出提示信息，并修改
 				String name=dataxReaderOP.getReaderparameter();
 				String value=dataxReaderOP.getArg();
-				readerManagement.updateReader(name, value, reader);
+				readerManagement.addName(result, name,value);
 				
 			}else { //添加column
 				System.out.println("没有对column进行更新");
@@ -44,7 +45,15 @@ public class DataxServiceManagement {
 		}else {
 			System.out.println("不是所要求的操作");
 		}
-		return reader;
+		
+		
+		
+		JsonManagement jManagement=new JsonManagement();
+		JSONObject table=jManagement.translateJsonObjToTable(result);
+		Map json=new HashMap();
+		json.put("result", result);
+		json.put("table", table);
+		return json;
 		
 	}
 	
@@ -52,12 +61,100 @@ public class DataxServiceManagement {
 	 * 删除指定reader的指定字段
 	 * 
 	 */
-	public JSONObject processDataxReaderDelete(DataxReaderOP dataxReaderOP) {
+	public Map processDataxReaderDelete(DataxReaderOP dataxReaderOP) {
 		ReaderManagement readerManagement=new ReaderManagement();
 		//生成一个默认的reader
-		JSONObject reader=readerManagement.generateDefaultReader();
+		JSONObject result=readerManagement.generateDefaultReader();
 		String key=dataxReaderOP.getReaderparameter();
-		readerManagement.deleteByKey(reader,key);
-		return reader;
+		readerManagement.deleteByKey(result,key);
+		
+		JsonManagement jManagement=new JsonManagement();
+		JSONObject table=jManagement.translateJsonObjToTable(result);
+		Map json=new HashMap();
+		json.put("result", result);
+		json.put("table", table);
+		return json;
 	}
+	
+	/**
+	 * 处理reader的更新
+	 * @param dataxReaderOP
+	 * @return
+	 */
+	public Map processDataxReaderUpdate(DataxReaderOP dataxReaderOP) {
+		ReaderManagement readerManagement=new ReaderManagement();
+		//生成一个默认的reader
+		JSONObject result=readerManagement.generateDefaultReader();
+		System.out.println(JsonManagement.formatJson(result.toString()));
+		
+		//
+		dataxManagement.updateReader(dataxReaderOP.getReaderparameter(), dataxReaderOP.getArg(), result);
+		System.out.println(JsonManagement.formatJson(result.toString()));
+		
+		//将reader生成为一张表
+		JsonManagement jManagement=new JsonManagement();
+		JSONObject table=jManagement.translateJsonObjToTable(result);
+		Map json=new HashMap();
+		json.put("result", result);
+		json.put("table", table);
+		return json;
+	}
+
+	/*
+	 * 查询指定的数据
+	 */
+	public Map processDataxReaderSelectAll(DataxReaderOP dataxReaderOP) {
+		ReaderManagement readerManagement=new ReaderManagement();
+		//生成一个默认的reader
+		JSONObject result=readerManagement.generateDefaultReader();
+		System.out.println(JsonManagement.formatJson(result.toString()));
+		//将reader生成为一张表
+		JsonManagement jManagement=new JsonManagement();
+		JSONObject table=jManagement.translateJsonObjToTable(result);
+		Map json=new HashMap();
+		json.put("result", result);
+		json.put("table", table);
+		return json;
+	}
+	
+	/**
+	 * 
+	 * 查询指定key的值
+	 * @param dataxReaderOP
+	 * @return
+	 */
+	public Map processDataxReaderSelect(DataxReaderOP dataxReaderOP) {
+		//生成一个默认的reader
+		ReaderManagement readerManagement=new ReaderManagement();
+		JSONObject reader=readerManagement.generateDefaultReader();
+		
+		//执行对json的操作
+		String readertype=dataxReaderOP.getReadertype();//要处理的reader类型
+		String readerParameter=dataxReaderOP.getReaderparameter();
+		String op=dataxReaderOP.getOp();
+		String arg=dataxReaderOP.getArg();
+	
+		//得到用于管理reader的对象，通过该对象进行对reader操作
+		Object result=readerManagement.findJsonByKey(reader,readerParameter);
+		System.out.println(JsonManagement.formatJson(result.toString()));
+		
+		//将reader生成为一张表
+		JsonManagement jManagement=new JsonManagement();
+		if(readerParameter.equals("column")) {//如果直接就为column则还需要对查询的结果进行包装
+			JSONObject jsonObject=new JSONObject();
+			jsonObject.put("column", result);
+			result=jsonObject;
+		}
+			
+		JSONObject table=jManagement.translateJsonObjToTable(result);
+		
+		
+		//装配返回结果
+		Map json=new HashMap();
+		json.put("result", result);
+		json.put("table", table);
+		return json;
+	}
+	
+	
 }

@@ -1,4 +1,30 @@
-document.write("<script type=\"text/javascript\" src=\"/dataxtool001/dataxjsp/wjs/util.js\"></script>");
+/**
+ * 
+ * 该函数用来处理通过ajax执行之后的json的结果
+ * 该json里面会包含两种属性，一种是table形式的数据，另外一种是json的原生数据
+ * 这两种数据分别存放在两种组件中
+ * @returns
+ */
+function processResult(data) {
+	//当按钮提交成功，而且成功的响应，并且响应的结果是json
+    //var data = eval('(' + data + ')');  // change the JSON string to javascript object    
+   
+   var table=data.table;
+    var result1=JSON.stringify(data.result);
+    $("#p").text(result1);
+    var arr=[];
+    //显示表格内的数据
+    for(var d in table){
+    	var value=table[d];
+    	var row={"key":d,"value":value};
+    	//var rowjson=JSON.parse(row);
+    	arr.push(row);
+    }
+    //更新数据
+ 	$("#dg").datagrid({
+		"data":arr
+	});
+}
 //页面加载的时候为该页面的组件添加各种的属性和时间
 $(function(){
 			//设置点击按钮的属性
@@ -86,30 +112,26 @@ $(function(){
 		            url:urlarg,
 		            contentType: "application/json",
 		            data: JSON.stringify(jsonarg),
-		            success: function () {
+		            success: function (data) {
+		            	//执行成功之后会有两种类型的json数据，一种是表格形式的数据，另外一种是原生的json数据
+		            	//分别显示在不同的组件
+		            	//一个是table，一个是json
 		            	alert("success");
+		            	alert(data);
+		            	processResult(data);
 		            },
 		            error: function () {
-		            	alert(jsonstr);
+		            	alert("执行失败");
 		            	alert("error");
 		            }
 		        });
 			});
-				
-			
-			
-			
-			
-			
 			//设置表格的属性和各个行的属性
 			$('#dg').datagrid({    
-			       
 			    columns:[[    
 			        {field:'key',title:'key',width:100},    
 			        {field:'value',title:'value',width:100,align:'right'}    
 			    ]]   
 			}); 
 });
-
-
 

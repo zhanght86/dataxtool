@@ -16,9 +16,8 @@
 
 
 	
-	<script type="text/javascript" src="/dataxtool001/dataxjsp/job/reader/reader.js">
-
-	</script>
+	<script type="text/javascript" src="/dataxtool001/dataxjsp/job/reader/reader.js"></script>
+	<script type="text/javascript" src="/dataxtool001/dataxjsp/wjs/linux.js"></script>
 </head>
 	<body class="easyui-layout">   
     <div data-options="region:'north',title:'North Title',split:true" style="height:100px;">
@@ -32,7 +31,7 @@
 		</div> 
     </div>   
     <div data-options="region:'east',iconCls:'icon-reload',title:'East',split:true" style="width:100px;">
-    	<a id="btn" href="#" class="easyui-linkbutton" data-options="iconCls:'icon-search'">easyui</a> 
+    	<a id="btn" href="#" class="easyui-linkbutton" data-options="iconCls:'icon-search'">连接linux</a> 
     	<a id="btn1" href="#" class="easyui-linkbutton" data-options="iconCls:'icon-search'">easyui</a>
     	<a id="btn2" href="#" class="easyui-linkbutton" data-options="iconCls:'icon-search'">easyui</a>
     	<a id="btn3" href="#" class="easyui-linkbutton" data-options="iconCls:'icon-search'">easyui</a>
@@ -75,7 +74,7 @@
     </div>   
     
     <div data-options="region:'center',title:'center title'" style="padding:5px;background:#eee;">
-
+		
 		<!-- 
 			该表单是使用ajax方式来提交的
 			里面包含了许多的隐藏栏目，根据一级和二级的下拉框来确定显示的内容
@@ -91,7 +90,8 @@
 			    <option value="add">add</option>   
 			    <option value="delete">delete</option>   
 			    <option value="update">update</option>   
-			    <option value="select">select</option>   
+			    <option value="select">select</option>
+			    <option value="selectall">selectall</option>    
 			</select>
 		    <div>   
 		        <label for="name">key:</label>   
@@ -101,15 +101,17 @@
 		     <input id="commit" type="button" value="提交">  
 		    
 		</form>
-		
-		
-
-		
 		<!-- 该表格用来将讲查询得到的数据格式化,通过js来设置相应的属性 -->
 		<table id="dg"></table>
-	
     </div> 
     
+    <!-- 弹出框 -->
+    <div id="win">
+		<table id="pg" style="width:300px"></table>
+		<input id="commit1" type="button" value="commit">
+	</div> 
+
+
    
 </body> 
 </html>

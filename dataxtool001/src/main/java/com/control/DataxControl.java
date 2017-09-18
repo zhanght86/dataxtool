@@ -1,14 +1,20 @@
 package com.control;
 
 
+import java.util.HashMap;
+import java.util.Map;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 import com.domain.op.DataxReaderOP;
 import com.json.JsonManagement;
 import com.service.DataxServiceManagement;
+import com.sun.org.apache.bcel.internal.generic.RETURN;
+
 import net.sf.json.JSONObject;
 
 /**
@@ -39,31 +45,59 @@ public class DataxControl {
 		ModelAndView modelAndView=new ModelAndView("reader");
 		return modelAndView;
 	}
+
+	
+	
+	@RequestMapping("/datax/reader/add")
+	public @ResponseBody Map processDataxReaderAdd(@RequestBody DataxReaderOP dataxReaderOP) {
+		//执行业务逻辑,病返回修改之后的reader对象
+		Map json=dataxServiceManagement.processDataxReaderAdd(dataxReaderOP);
+		return json;
+	}
+	
+	@RequestMapping("/datax/reader/delete")
+	public @ResponseBody Map processDataxReaderDelete(@RequestBody DataxReaderOP dataxReaderOP) {
+		//执行业务逻辑,病返回修改之后的reader对象
+		Map json=dataxServiceManagement.processDataxReaderDelete(dataxReaderOP);
+		return json;
+	}
+	
 	/**
-	 * 用来处理对reader的add操作
-	 * control主要用来控制业务逻辑
+	 * 
+	 * 用于reader更新
 	 * @param dataxReaderOP
 	 * @return
 	 */
-	//用来处理添加的操作,使用的是参数的映射
-	@RequestMapping("/datax/reader/add")
-	public ModelAndView processDataxReaderAdd(@RequestBody DataxReaderOP dataxReaderOP) {
+	@RequestMapping("/datax/reader/update")
+	public @ResponseBody Map processDataxReaderUpdate(@RequestBody DataxReaderOP dataxReaderOP) {
 		//执行业务逻辑,病返回修改之后的reader对象
-		JSONObject reader=dataxServiceManagement.processDataxReaderAdd(dataxReaderOP);
-		//创建并返回指定的视图
-		ModelAndView modelAndView=new ModelAndView("reader");
-		return modelAndView;
+		Map json=dataxServiceManagement.processDataxReaderUpdate(dataxReaderOP);
+		return json;
 	}
-	
-	
-	@RequestMapping("/datax/reader/delete")
-	public ModelAndView processDataxReaderDelete(@RequestBody DataxReaderOP dataxReaderOP) {
+	/**
+	 * 
+	 * 该对象用来查询整个reader的信息
+	 * @param dataxReaderOP
+	 * @return
+	 */
+	@RequestMapping("/datax/reader/selectall")
+	public @ResponseBody Map processDataxReaderSelectall(@RequestBody DataxReaderOP dataxReaderOP) {
 		//执行业务逻辑,病返回修改之后的reader对象
-		JSONObject reader=dataxServiceManagement.processDataxReaderDelete(dataxReaderOP);
-		System.out.println(JsonManagement.formatJson(reader.toString()));
-		//创建并返回指定的视图
-		ModelAndView modelAndView=new ModelAndView("reader");
-		return modelAndView;
+		Map json=dataxServiceManagement.processDataxReaderSelectAll(dataxReaderOP);
+		return json;
 	}
+	/**
+	 * 
+	 * 查询指定key的值
+	 * @param dataxReaderOP
+	 * @return
+	 */
+	@RequestMapping("/datax/reader/select")
+	public @ResponseBody Map processDataxReaderSelect(@RequestBody DataxReaderOP dataxReaderOP) {
+		//执行业务逻辑,病返回修改之后的reader对象
+		Map json=dataxServiceManagement.processDataxReaderSelect(dataxReaderOP);
+		return json;
+	}
+
 	
 }
