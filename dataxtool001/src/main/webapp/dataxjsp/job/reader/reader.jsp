@@ -22,6 +22,7 @@
 	<body class="easyui-layout">   
     <div data-options="region:'north',title:'North Title',split:true" style="height:100px;">
     	<h1 align="center">dataxtool管理器</h1>
+    	<div align="right" id="status"></div>
     </div>   
     <div data-options="region:'south',title:'South Title',split:true" style="height:100px;">
 		<div id="p" class="easyui-panel" title="My Panel"     
@@ -105,10 +106,28 @@
 		<table id="dg"></table>
     </div> 
     
-    <!-- 弹出框 -->
+    <!-- 弹出框 
+    	弹出框里面包含一张表单
+    -->
     <div id="win">
-		<table id="pg" style="width:300px"></table>
-		<input id="commit1" type="button" value="commit">
+		<form id="linuxform" method="post">   
+		    <div>   
+		        <label for="name">ip:</label>   
+		        <input class="easyui-validatebox" type="text" id="ip" data-options="required:true" />   
+		    </div>   
+		    <div>   
+		        <label for="email">username:</label>   
+		        <input class="easyui-validatebox" type="text" id="username"  />   
+		    </div>   
+		     <div>   
+		        <label for="email">password:</label>   
+		        <input class="easyui-validatebox" type="text" id="password"  />   
+		    </div>  
+		    <div>   
+		        <label for="tijiao">ssh连接:</label>   
+		        <input class="easyui-validatebox" type="button" id="link"  value="link"/>   
+		    </div>  
+		</form> 
 	</div> 
 
 

@@ -42,5 +42,11 @@ public class JobConfigurationManagement {
 		readerManagement.updateReader(name,value,json);
 		
 	}
+	
+	public ReaderManagement findReaderManagement() {
+		return  contentManagement.getReaderManagement();
+		
+		
+	}
 
 }

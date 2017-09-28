@@ -3,6 +3,8 @@ import java.util.HashMap;
 import java.util.Map;
 
 import javax.json.Json;
+import javax.json.JsonArray;
+import javax.json.JsonObject;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -12,6 +14,7 @@ import com.job.ReaderManagement;
 import com.json.JsonManagement;
 import com.sun.corba.se.impl.oa.poa.ActiveObjectMap.Key;
 
+import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
 //业务层的类，由spring容器来管理
 @Service
@@ -154,6 +157,33 @@ public class DataxServiceManagement {
 		json.put("result", result);
 		json.put("table", table);
 		return json;
+	}
+
+	/**
+	 * 
+	 * 得到的是经过处理之后的json，是所有的json的数据
+	 * @return
+	 */
+	public JSONArray getAllReaders() {
+		JSONObject reader1=dataxManagement.generateDefaultReader();
+		JSONObject reader2=dataxManagement.generateDefaultReader();
+		JSONObject reader11=processReader(reader1);
+		JSONObject reader12=processReader(reader1);
+		JSONArray jsons=new JSONArray();
+		jsons.add(reader11);
+		jsons.add(reader12);
+		return jsons;
+	}
+
+	/**
+	 * 只得到json的name和种类
+	 * @param reader1
+	 * @return
+	 */
+	private JSONObject processReader(JSONObject reader) {
+		JSONObject jsonObject=new JSONObject();
+		jsonObject.put("name", reader.get("name"));
+		return jsonObject;
 	}
 	
 	

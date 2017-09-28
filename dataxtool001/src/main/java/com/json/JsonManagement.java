@@ -8,12 +8,14 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.Iterator;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
 import javax.json.Json;
 
 import org.springframework.stereotype.Service;
+import org.springframework.web.servlet.mvc.method.annotation.RequestResponseBodyMethodProcessor;
 
 import com.alibaba.fastjson.parser.deserializer.ParseProcess;
 import com.sun.org.apache.bcel.internal.generic.IF_ACMPEQ;
@@ -49,6 +51,67 @@ public class JsonManagement {
 			e.printStackTrace();
 		}
 		return json.toString();
+	}
+	//解析一个文件
+	public JSONObject parseJsonFileToJsonObject(String uri) {
+		if(uri==null||"".equals(uri)) {//浣跨敤榛樿鐨勮矾寰�
+			uri="d://job.json";
+		}
+		File f=new File(uri);
+		StringBuffer json=new StringBuffer();
+		try {
+			InputStream in=new FileInputStream(f);
+			BufferedReader read=new BufferedReader(new InputStreamReader(in, "UTF-8"));
+			String line="";
+			while((line=read.readLine())!=null) {
+				json.append(line);
+				System.out.println(line);
+			}
+		} catch (FileNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IOException e) {
+			System.out.println("IO寮傚父");
+			e.printStackTrace();
+		}
+		return  JSONObject.fromObject(json.toString());
+		
+	}
+	
+	//从指定的url中加载所有的json,url为目录
+	public List<JSONObject> parseJsonFileToJsonObjects(String url){
+		List<JSONObject> jsons=new LinkedList<JSONObject>();
+		List<String> names=findAllFileNameFromUrl(url);
+		for(int i=0;i<names.size();i++) {
+			String qualifiedName=url+names.get(i);
+			JSONObject jsonObject=parseJsonFileToJsonObject(qualifiedName);
+			JSONObject newJson=new JSONObject();
+			newJson.put("filename", names.get(i));
+			newJson.put("data", jsonObject);
+			jsons.add(newJson);
+			
+		}
+		return jsons;
+		
+	}
+	//得到目录下面的所有文件的名字，忽略子目录，只得到文件的名字
+	public List<String> findAllFileNameFromUrl(String  url){
+		List<String> names=new LinkedList<String>();
+		//得到所有的文件名
+		File file=new File(url);//目录对象
+		if(!file.exists()) {
+			System.out.println("该目录不存在，无法加载文件");
+			return names;
+		}else {
+			File[] files=file.listFiles();
+			for(int i=0;i<files.length;i++) {
+				File f=files[i];
+				if(!f.isDirectory()) { //判断是文件还是目录
+					names.add(f.getName());
+				}
+			}
+		}
+		return names;
 	}
 	
 	public JSONObject createNewJsonObject() {
@@ -182,6 +245,7 @@ public class JsonManagement {
 	
 	
 	
+	
     public static String formatJson(String jsonStr) {
         if (null == jsonStr || "".equals(jsonStr)) return "";
         StringBuilder sb = new StringBuilder();
@@ -246,7 +310,15 @@ public class JsonManagement {
     
     public static void StringToFile(String json,String url) {
     	  // TODO Auto-generated method stub
-        File f=new File(url);//鏂板缓涓�涓枃浠跺璞�
+        File f=new File(url);//
+        if(!f.exists()) {
+        	try {
+				f.createNewFile();
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+        }
         FileWriter fw;
         try {
         	fw=new FileWriter(f);//鏂板缓涓�涓狥ileWriter

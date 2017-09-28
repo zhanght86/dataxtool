@@ -21,19 +21,13 @@
    	 
     <bean class="org.springframework.web.servlet.view.InternalResourceViewResolver"	>	
     		<property name="prefix" value="/dataxjsp/job/reader/"></property>
+    	
        		<property name="suffix" value=".jsp"></property>
     </bean> 
 
     	
     
-<!-- 	<bean class="org.springframework.web.servlet.view.json.MappingJacksonJsonView">
-		默认情况下会将所有格式的数据都输出成json
-			通过该属性来指定哪些模型对象要输出为json格式
-		
-		<property name="renderedAttributes" value="reader"></property>
-    	<property name="prefix" value="/dataxjsp/job/reader/"></property>
-       	<property name="suffix" value=".jsp"></property>
-	</bean> -->
+
 	
 
 

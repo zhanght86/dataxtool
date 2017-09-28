@@ -4,6 +4,10 @@ package com.control;
 import java.util.HashMap;
 import java.util.Map;
 
+import javax.json.Json;
+import javax.json.JsonArray;
+import javax.json.JsonObject;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -15,6 +19,7 @@ import com.json.JsonManagement;
 import com.service.DataxServiceManagement;
 import com.sun.org.apache.bcel.internal.generic.RETURN;
 
+import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
 
 /**
@@ -97,6 +102,15 @@ public class DataxControl {
 		//执行业务逻辑,病返回修改之后的reader对象
 		Map json=dataxServiceManagement.processDataxReaderSelect(dataxReaderOP);
 		return json;
+	}
+	/**
+	 * 
+	 * 加载reader
+	 */
+	@RequestMapping("/datax/reader/loadreaders.do")
+	public String loadReaders() {
+		JSONArray jsonArray=dataxServiceManagement.getAllReaders();
+		return jsonArray.toString();
 	}
 
 	

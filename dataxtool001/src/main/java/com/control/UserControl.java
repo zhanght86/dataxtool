@@ -1,9 +1,7 @@
 package com.control;
-
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.domain.User;
@@ -17,9 +15,9 @@ import com.domain.User;
 @Controller
 public class UserControl {
 	//处理 user的请求，但是方法必须是post
-	@RequestMapping("/user.action")
-	public ModelAndView createUser(User user) {//user的参数会自动的绑定
-		//userService.createUser(user);
+	@RequestMapping("/user.do")
+	public ModelAndView createUser(@RequestBody User user) {//user的参数会自动的绑定
+		System.out.println(user.getUsername());
 		ModelAndView modelAndView=new ModelAndView();
 		modelAndView.setViewName("user/success");
 		modelAndView.addObject("user",user);
